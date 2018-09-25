@@ -1,11 +1,11 @@
 // Manager Inventory Management App
 
-// Required NPM modules
+// Section 1   Required NPM modules ============================================
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var chalk = require("chalk");
 
-// Common functions used in bamazonCustomer/Manager/Supervisor
+// Section 1 - 2 Common functions used in bamazonCustomer/Manager/Supervisor
 var common = require("./common.js");
 
 var sqlConfig = {
@@ -18,20 +18,18 @@ var sqlConfig = {
 
 const lowInventory = 5;
 
-// create the connection information for the sql database
+// Section 1 - 3 create the connection information for the sql database
 var connection = mysql.createConnection(sqlConfig);
 
-// connect to the mysql server and sql database
+// Section 1 - 4 connect to the mysql server and sql database
 connection.connect((err) => {
     if (err) throw err;
     
-    common.printHeader("Welcome to Bamazon Inventory Managment App!","magenta");
+    common.printHeader("Welcome to Bamazon Wine Inventory Managment App!","white");
     manageInventory();
 });
   
-// ____________________________________________________________________________________
-// Functions
-// ____________________________________________________________________________________
+// Section 2 - 1 ===============================================================
 
 function manageInventory() {
 
@@ -50,13 +48,13 @@ function manageInventory() {
             case "View Products for Sale":
                 viewProducts();
                 break;
-            case "View Low Inventory":
+            case "View Low Wine Inventory":
                 viewLowInventory();
                 break;
-            case "Add to Inventory":
+            case "Add Wine to Inventory":
                 addInventory();
                 break;
-            case "Add New Product":
+            case "Add New Wine":
                 addProduct();
                 break;
             case "Exit":
@@ -66,7 +64,7 @@ function manageInventory() {
     });
 }
 
-// ____________________________________________________________________________________
+// Section 2 - 2 ==============================================================================
 
 function viewProducts() {
 
@@ -74,13 +72,13 @@ function viewProducts() {
     connection.query("SELECT * FROM products", (err, results) => {
         if (err) throw err;
 
-        common.printHeader("Store Inventory", "magenta");
-        common.displayItems(results, "magenta", "manager");
+        common.printHeader("Store Inventory", "white");
+        common.displayItems(results, "white", "manager");
         manageInventory();
     });
 }
 
-// ____________________________________________________________________________________
+// Section 2 - 3 ================================================================================
 
 function viewLowInventory() {
 
@@ -89,13 +87,13 @@ function viewLowInventory() {
         if (err) throw err;
 
         // console.log(chalk.red.bold("\nProducts with Low Inventory"));
-        common.printHeader("Products with Low Inventory", "red");
+        common.printHeader("Products with Low Wine Inventory", "red");
         common.displayItems(results,"red", "manager");
         manageInventory();
     });
 }
 
-// ____________________________________________________________________________________
+// Section 2 - 4 ====================================================================================
 
 function addProduct() {
     // Add a new product to the store inventory
@@ -117,30 +115,30 @@ function addProduct() {
                 type: "input",
                 message: "Enter Product Name",
                 validate: function(prod){
-                    // Check if item number is valid, this method returns the object if itemNumber is found
+                    // Check number validity, method returns the object if itemNumber is found
                     if (prod.length <= maxProdLength) {
                         return true;
                     }
-                    console.log(chalk.red.bold('\nProduct name too long'));
+                    console.log(chalk.red.bold('\nOops!! the product name too long'));
                     return false;
                 }
             },
             {
                 name: "type" ,
                 type: "rawlist",
-                message: "Select Product Category",
+                message: "Select a Wine Category",
                 choices: choiceArray
             },
             {
                 name: "price",
                 type: "input",
-                message: "Enter Customer Price",
+                message: "Enter Customer Price (Case of 12)",
                 validate: (num) => {return common.isNumber(num);}
             },
             {
                 name: "quantity",
                 type: "input",
-                message: "Enter Quantity",
+                message: "Enter Quantity (Case of 12)",
                 validate: (num) => {return common.isNumber(num);}
             }
         ])
@@ -151,14 +149,14 @@ function addProduct() {
                 (err, results) =>  {
                     if (err) throw err;
 
-                    console.log(chalk.green.bold(`\n${results.affectedRows} product added!\n`));
+                    console.log(chalk.green.bold(`\n${results.affectedRows} You added new a wine!\n`));
                     manageInventory();
             });
         });
     })
 }
 
-// ____________________________________________________________________________________
+// Section 2 - 5 =========================================================================
 
 function addInventory() {
     // Increment stock quanity by user entered amount
@@ -183,7 +181,7 @@ function addInventory() {
             {
                 name: "qty" ,
                 type: "input",
-                message: "Enter quantity to add to stock",
+                message: "Please, enter the number of cases to add to inventory",
                 validate: (num) => {return common.isNumber(num);}
             }
         ])
@@ -194,7 +192,7 @@ function addInventory() {
                 function (err,results) {
                     if (err) throw err;
 
-                    console.log(chalk.green.bold(`\n${results.affectedRows} product updated!\n`));
+                    console.log(chalk.green.bold(`\n${results.affectedRows} You just updated the wine!\n`));
                     manageInventory();
                 }
             );
@@ -202,10 +200,10 @@ function addInventory() {
     });
 }
 
-// ____________________________________________________________________________________
+// Section 2 - 6 =====================================================================================
 
 function exitBamazon() {
 
-    console.log(chalk.magenta.bold("\nHave a great day!\n"))
+    console.log(chalk.magenta.bold("\nThank you for your time and consideration!  See you again soon.!\n"))
     connection.end();
 }

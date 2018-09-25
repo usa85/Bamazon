@@ -1,9 +1,9 @@
-// Simple point of sale application
+// Point of sale application
 
 // Required NPM modules
-var mysql = require("mysql");
-var inquirer = require("inquirer");
-var chalk = require("chalk");
+var mysql = require("mysql"); // to run and to communicate with mysqul
+var inquirer = require("inquirer"); // to require common interactive command line user interface
+var chalk = require("chalk"); // to change the color in bach
 
 // Common functions used in bamazonCustomer/Manager/Supervisor
 var common = require("./common.js");
@@ -12,7 +12,7 @@ var sqlConfig = {
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "password",
+    password: "Maureen61",
     database: "bamazon_DB"
 };
 
@@ -23,13 +23,12 @@ var connection = mysql.createConnection(sqlConfig);
 connection.connect(function(err) {
     if (err) throw err;
 
-    common.printHeader("Welcome to Bamazon Tennis Super Store!","blue");
+    common.printHeader("Welcome to Bamazon Wine Distributor Store!","magenta");
     purchaseItem();
 });
   
-// ____________________________________________________________________________________
 // Functions
-// ____________________________________________________________________________________
+//=======================================
 
 function purchaseItem() {
     // Query the DB for all items in store inventory
@@ -48,11 +47,6 @@ function purchaseItem() {
                 message: chalk.yellow("Which item would you like to purchase?"),
                 validate: function(num){
                     // Check if item number is valid, returns object if found, else returns -1 if not found
-                    // Note: 'item' is an object with the specific record if found in the db. Could use the variable 'item'
-                    // to access the values instead of querying the db later in updateInventory. Didn't know if it was best practice
-                    // to pass this variable into the next function, or perform a new query to get the requested record.
-                    // Probably the later, could modify updateInventory to pass the table name into the function, then the function
-                    // would be generic and could be used to udpate inventories in various tables.
                     item = results.find(x => x.id === parseInt(num));
                     if (item) {
                         return true;
@@ -62,10 +56,10 @@ function purchaseItem() {
             }
         ])
         .then(function(ans1) {
-            // Split into two prompt statements. Use the item number from the first response to check if there is sufficient inventory, 
+            // Get two prompt statements. Use the item number from the first response to check if there is sufficient inventory, 
             // then proceed with purchase. Otherwise, ask customer to enter another amount.
 
-            // Prompt user to select quantity
+            // to select quantity
             inquirer.prompt([
                 {
                     name: "qty",
@@ -87,7 +81,7 @@ function purchaseItem() {
     });
 }
 
-// ____________________________________________________________________________________
+// ============================================================================
 
 function updateInventory(ix, qty) {
     if (qty != 0) {
@@ -120,7 +114,7 @@ function updateInventory(ix, qty) {
     }
 }
 
-// ____________________________________________________________________________________
+// ===============================================================
 
 function exitBamazon() {
 

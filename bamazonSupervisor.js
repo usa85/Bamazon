@@ -21,13 +21,12 @@ var connection = mysql.createConnection(sqlConfig);
 connection.connect(function(err) {
     if (err) throw err;
     
-    common.printHeader("Welcome to Bamazon Supervisor Department Management App","green");
+    common.printHeader("Welcome to Bamazon Wine Department Store App","green");
     manageDepartments();
 });
 
-// ____________________________________________________________________________________
-// Functions
-// ____________________________________________________________________________________
+// ========================================================
+
 
 function manageDepartments() {
 
@@ -37,16 +36,16 @@ function manageDepartments() {
             name: "command",
             type: "rawlist",
             message: "Please select a function",
-            choices: ["View Product Sales by Department", "Create New Department", "Exit"]
+            choices: ["View Wine Product Sales by Wine Types", "Create New Wine Types", "Exit"]
         }
     ])
     .then(function(cmd) {
         // console.log(cmd);
         switch (cmd.command) {
-            case "View Product Sales by Department":
+            case "View Wine Product Sales by Wine Types":
                 viewSales();
                 break;
-            case "Create New Department":
+            case "Create New Wine Types":
                 addDepartment();
                 break;
             case "Exit":
@@ -56,7 +55,7 @@ function manageDepartments() {
     });
 }
 
-// ____________________________________________________________________________________
+//================================================================
 
 function viewSales() {
 
@@ -72,13 +71,13 @@ function viewSales() {
     (err, results) => {
         if (err) throw err;
 
-        common.printHeader("Product Sales by Department", "green")
+        common.printHeader("Product Sales by Wine Type", "green")
         displaySales(results)
         manageDepartments();
     });
 }
 
-// ____________________________________________________________________________________
+// ======================================================================
 
 function addDepartment() {
 
@@ -88,7 +87,7 @@ function addDepartment() {
         {
             name: "name",
             type: "input",
-            message: "Enter New Department Name",
+            message: "Enter New Wine Type",
             validate: function(dept){
                 // Check if item number is valid, this method returns the object if itemNumber is found
                 if (dept.length <= maxDeptLength) {
@@ -113,22 +112,22 @@ function addDepartment() {
 
             if (err) throw err;
 
-            console.log(chalk.green.bold(`\n${results.affectedRows} department added!\n`));
+            console.log(chalk.green.bold(`\n${results.affectedRows} You added a new Wine type!\n`));
             manageDepartments();
         });
     });
 }
 
-// ____________________________________________________________________________________
+//=============================================================================================
 
 function displaySales(list) {
     
-    console.log(chalk.green("\nDepartment        Total Profit($)"));
-    console.log(chalk.green("--------------------------------"));
+    console.log(chalk.green("\nWine Type        Total Profit($)"));
+    console.log(chalk.white("--------------------------------"));
 
-    // Display the sales by department
+    // Display the sales by wine types
     for (var i =0; i < list.length; i++) {
-        // If value is null, due to no sales for any product in selected department, then set value to over head costs (neg value)
+        // If value is null, due to no sales for any product in selected wine type, then set value to over head costs as a loss or negative value
         if (list[i].total_profit === null){
             list[i].total_profit = -list[i].over_head_costs;
         }
@@ -136,10 +135,10 @@ function displaySales(list) {
     }
     console.log("\n");
 }
-// ____________________________________________________________________________________
+// ===========================================================================
 
 function exitBamazon() {
 
-    console.log(chalk.green.bold("\nHave a great day!\n"))
+    console.log(chalk.yellow.bold("\nThank you for your time can consideration!  See you again soon!\n"))
     connection.end();
 }
